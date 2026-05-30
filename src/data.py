@@ -21,6 +21,7 @@ def get_data(ticker="SPY", start="2010-01-01", end="2024-12-31"):
     return data
 
 def get_yearly_dates(data):
+    
     yearly_dates = {}
     datetime_index = pd.DatetimeIndex(data.index)
 
@@ -34,9 +35,25 @@ def get_yearly_dates(data):
         yearly_dates[year].append(date)
 
     return yearly_dates
+
+def get_monthly_dates(data):
     
+    months_dates = {}
+    datetime_index = pd.DatetimeIndex(data.index)
+
+    for date in datetime_index:
+        months = date.month
+
+        if months not in months_dates:
+            months_dates[months] = []
+
+
+        months_dates[months].append(date)
+
+    return months_dates
+
 df = get_data()
 ydf = get_yearly_dates(get_data())
 
-print(ydf.keys())
-print(ydf[2000])
+date = ydf[2024][0]  # first trading day of 2024
+# print(df.loc[date, "Close"])  # actual closing price for that date
