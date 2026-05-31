@@ -34,7 +34,7 @@ class PanicPayal:
             return 'still in cooldown'
 
         #selling
-        if portfolio < self.peak_value * 0.92:
+        if portfolio < self.peak_value * 0.92 and self.shares >0:
             self.cash = self.shares * price
             self.shares = 0
             self.waiting_days = 30
@@ -43,6 +43,7 @@ class PanicPayal:
         elif self.cash != 0 and self.waiting_days == 0:
             self.shares = (self.cash / price).__round__(2)
             self.cash = 0
+
 
 
 
@@ -59,8 +60,9 @@ class DipHunterDev:
             self.recent_high = price
 
         if price < self.recent_high * 0.95 and self.cash != 0:
-            self.shares += self.cash * 0.25 / price
-            self.cash -= self.shares*price
+            new_shares = self.cash * 0.25 / price
+            self.cash -= new_shares * price   # subtract only what was spent
+            self.shares += new_shares
 
 
 

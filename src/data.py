@@ -36,24 +36,4 @@ def get_yearly_dates(data):
 
     return yearly_dates
 
-def get_monthly_dates(data):
-    
-    months_dates = {}
-    datetime_index = pd.DatetimeIndex(data.index)
 
-    for date in datetime_index:
-        months = date.month
-
-        if months not in months_dates:
-            months_dates[months] = []
-
-
-        months_dates[months].append(date)
-
-    return months_dates
-
-df = get_data()
-ydf = get_yearly_dates(get_data())
-
-date = ydf[2024][0]  # first trading day of 2024
-# print(df.loc[date, "Close"])  # actual closing price for that date
