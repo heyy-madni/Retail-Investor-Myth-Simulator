@@ -54,15 +54,15 @@ def run_simulation():
 
     return result
 
-data=run_simulation()
+data = run_simulation()
 
-sana=data["Sana"]
-payal=data["Payal"]
-dev=data["Dev"]
-rehan=data["Rehan"]
-hari=data['Hari']
+sana  = data["Sana"]
+payal = data["Payal"]
+dev   = data["Dev"]
+rehan = data["Rehan"]
+hari  = data['Hari']
 
-df=pd.DataFrame(data)
+df    = pd.DataFrame(data)
 
 df.index.name = 'year'
 df = df.reset_index()
@@ -72,8 +72,6 @@ inflation_df = pd.read_csv(inflation_file)
 df = df.merge(inflation_df, on='year')
 
 
-
-print(df)
 
 # for agent_name, yearly_data in data.items():
 #     print(f"\n{agent_name}:")
