@@ -61,7 +61,7 @@ class DipHunterDev:
 
         if price < self.recent_high * 0.95 and self.cash != 0:
             new_shares = self.cash * 0.25 / price
-            self.cash -= new_shares * price   # subtract only what was spent
+            self.cash -= new_shares * price  
             self.shares += new_shares
 
 

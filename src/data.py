@@ -4,6 +4,8 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
+SRC_DIR = Path(__file__).resolve().parent
+
 
 
 def get_data(ticker="SPY", start="2010-01-01", end="2024-12-31"):

@@ -3,6 +3,9 @@ from data import get_data ,get_yearly_dates,DATA_DIR
 import agents  
 import pandas as pd
 
+
+
+
 inflation_file= DATA_DIR/'inflation.csv'
 
 def run_simulation():
@@ -71,11 +74,5 @@ inflation_df = pd.read_csv(inflation_file)
 
 df = df.merge(inflation_df, on='year')
 
-
-
-# for agent_name, yearly_data in data.items():
-#     print(f"\n{agent_name}:")
-#     for year, value in yearly_data.items():
-#         print(f"  {year}: ${value:,.2f}")
 
 
