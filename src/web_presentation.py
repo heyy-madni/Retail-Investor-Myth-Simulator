@@ -1,51 +1,38 @@
 from simulator import df
 import pandas as pd
 import streamlit as st
+from data import investor_summary
+import plotly.express as px
 
 
 
-def investor_summary(df, beliefs):
-    investors = list(beliefs.keys())
 
-    # cumulative inflation from start year to end year
-    inflation_factor = (1 + df["inflation_rate"] / 100).cumprod().iloc[-1]
 
-    summary = []
+st.title('Retail-Investor-Myth-Simulator')
 
-    for investor in investors:
-        initial = df[investor].iloc[0]
-        final = df[investor].iloc[-1]
 
-        total_return = ((final - initial) / initial) * 100
+#chart block
+df_raw = df.drop(columns='inflation_rate')
 
-        years = len(df) - 1
-        cagr = ((final / initial) ** (1 / years) - 1) * 100
+melt_df=pd.melt(df_raw,['year'])
+melt_df.rename(columns={'variable':'investor','value':'portfolio'},inplace=True)
 
-        inflation_adjusted_final = final / inflation_factor
 
-        summary.append({
-            "Investor": investor,
-            "Initial Value": round(initial, 2),
-            "Final Value": round(final, 2),
-            "Inflation Adjusted Final (2000 $)": round(inflation_adjusted_final, 2),
-            "Inflation Lost $": round(final - inflation_adjusted_final, 2),
-            "Total Return %": round(total_return, 2),
-            "CAGR %": round(cagr, 2),
-            "Belief": beliefs[investor]
-        })
 
-    summary_df = pd.DataFrame(summary)
+st.markdown("**Time frame : 2000 - 2024** / **Index** :S&P 500." "\n")
+st.markdown("""
+**Time frame: 2000–2024 | Index: S&P 500**
 
-    summary_df = (
-        summary_df
-        .sort_values("Final Value", ascending=False)
-        .reset_index(drop=True)
-    )
+Each investor starts with $10,000 and follows one fixed rule — no learning, no adapting.
+The goal: see what happens depending on *how* you behave, not just *what* you buy.
+""")
+st.plotly_chart(px.line(melt_df,x='year',y='portfolio',color='investor',labels={'year':'YEAR','investor':'Investor'}))
 
-    summary_df.index += 1
-    summary_df.index.name = "Rank"
 
-    return summary_df
+
+
+#investor summary block
+st.subheader('Investor Summary')
 
 beliefs = {
     "Sana": "Never sell. Buy once. Hold forever.",
@@ -55,22 +42,13 @@ beliefs = {
     "Rehan": "Buy a fixed amount every month. Never stop."
 }
 
-
 summary_df=investor_summary(df, beliefs)
-
-
-st.title('Retail-Investor-Myth-Simulator')
-
-
-
-df_plot = df.drop(columns='inflation_rate')
-st.line_chart(df_plot,x='year')
-
-st.subheader('Investor Summary')
-st.dataframe(summary_df)
+st.dataframe(summary_df,use_container_width=True)
 
 
 
+
+#winner and loser block
 winner = summary_df.iloc[0]
 loser = summary_df.iloc[-1]
 
@@ -89,12 +67,5 @@ Not a surprise, but seeing the actual numbers makes it hit different.
 """)
 
 
-st.subheader('Personal Verdict')
-st.write(
-    'I simulated 5 agents to mimic retail investor beliefs. '
-    'most of them made money because they kept their shares for a long time. '
-    'the one who had a rule to panic sell barely made anything. '
-    'holding index shares for the long term is always a win — '
-    'there will be dips, but just buy and hold.'
-)
+
 

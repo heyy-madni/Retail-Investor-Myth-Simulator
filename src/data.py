@@ -39,3 +39,46 @@ def get_yearly_dates(data):
     return yearly_dates
 
 
+def investor_summary(df, beliefs):
+    investors = list(beliefs.keys())
+
+    inflation_factor = (1 + df["inflation_rate"] / 100).cumprod().iloc[-1]
+
+    summary = []
+
+    for investor in investors:
+        initial = df[investor].iloc[0]
+        final = df[investor].iloc[-1]
+
+        total_return = ((final - initial) / initial) * 100
+
+        years = len(df) - 1
+        cagr = ((final / initial) ** (1 / years) - 1) * 100
+
+        inflation_adjusted_final = final / inflation_factor
+
+        summary.append({
+            "Investor": investor,
+            "Initial Value": round(initial, 2),
+            "Final Value": round(final, 2),
+            "Inflation Adjusted Final (2000 $)": round(inflation_adjusted_final, 2),
+            "Inflation Lost $": round(final - inflation_adjusted_final, 2),
+            "Total Return %": round(total_return, 2),
+            "CAGR %": round(cagr, 2),
+            "Belief": beliefs[investor]
+        })
+
+    summary_df = pd.DataFrame(summary)
+
+    summary_df = (
+        summary_df
+        .sort_values("Final Value", ascending=False)
+        .reset_index(drop=True)
+    )
+
+    summary_df.index += 1
+    summary_df.index.name = "Rank"
+
+    return summary_df
+
+
