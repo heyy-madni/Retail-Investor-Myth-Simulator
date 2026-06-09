@@ -19,13 +19,15 @@ melt_df.rename(columns={'variable':'investor','value':'portfolio'},inplace=True)
 
 
 
-st.markdown("**Time frame : 2000 - 2024** / **Index** :S&P 500." "\n")
-st.markdown("""
+#chart
+
+st.info("""
 **Time frame: 2000–2024 | Index: S&P 500**
 
 Each investor starts with $10,000 and follows one fixed rule — no learning, no adapting.
 The goal: see what happens depending on *how* you behave, not just *what* you buy.
 """)
+
 st.plotly_chart(px.line(melt_df,x='year',y='portfolio',color='investor',labels={'year':'YEAR','investor':'Investor'}))
 
 
@@ -52,7 +54,7 @@ st.dataframe(summary_df,use_container_width=True)
 winner = summary_df.iloc[0]
 loser = summary_df.iloc[-1]
 
-st.write(f"""
+st.info(f"""
 I simulated 5 investors, each with a different belief about the market.
 
 **{winner['Investor']}** won with a strategy of "{winner['Belief']}" — 
